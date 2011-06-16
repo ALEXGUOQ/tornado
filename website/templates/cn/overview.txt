@@ -774,20 +774,17 @@ Google/Gmail、Facebook、Twitter、Yahoo 以及 FriendFeed。这个模块可以
 
 ### 调试模式和自动重载
 
-If you pass `debug=True` to the `Application` constructor, the app will be run
-in debug mode.  In this mode, templates will not be cached and the app will
-watch for changes to its source files and reload itself when anything changes.
-This reduces the need to manually restart the server during development.
-However, certain failures (such as syntax errors at import time) can still
-take the server down in a way that debug mode cannot currently recover from.
+如果你将 `debug=True` 传递给 `Application` 构造器，该 app 将以调试模式
+运行。在调试模式下，模板将不会被缓存，而这个 app 会监视代码文件的修改，
+如果发现修改动作，这个 app 就会被重新加载。在开发过程中，这会大大减少
+手动重启服务的次数。然而有些问题（例如 import 时的语法错误）还是会让服务器
+下线，目前的 debug 模式还无法避免这些情况。
 
-Debug mode is not compatible with `HTTPServer`'s multi-process mode.  You
-must not give `HTTPServer.start` an argument greater than 1 if you are using
-debug mode.  
+调试模式和 `HTTPServer` 的多进程模式不兼容。在调试模式下，你必须将
+`HTTPServer.start` 的参数设为不大于 1 的数字。
 
-The automatic reloading feature of debug mode is available as a
-standalone module in `tornado.autoreload`, and is optionally used by
-the test runner in `tornado.testing.main`.
+调试模式下的自动重载功能可以通过独立的模块 `tornado.autoreload` 调用，
+作为测试运行器的一个可选项目，`tornado.testing.main` 中也有用到它。
 
 
 性能
@@ -826,19 +823,14 @@ Tornado 部署方案（根据具体的硬件情况，我们推荐一个 CPU 核�
 我们在多台服务器上，同时部署了多个 Tornado 实例，通常，一个 CPU 内核
 会对应一个 Tornado 线程。
 
-and static file server. We run multiple instances of the Tornado web
-server on multiple frontend machines. We typically run one Tornado frontend
-per core on the machine (sometimes more depending on utilization).
+因为我们的 Web 服务器是跑在负载均衡服务器（如 nginx）后面的，所以需要把
+`xheaders=True` 传到 `HTTPServer` 的构造器当中去。这是为了让 Tornado 
+使用 `X-Real-IP` 这样的的 header 信息来获取用户的真实 IP地址，如果使用传统
+的方法，你只能得到这台负载均衡服务器的 IP 地址。
 
-When running behind a load balancer like nginx, it is recommended to pass
-`xheaders=True` to the `HTTPServer` constructor.  This will tell Tornado
-to use headers like `X-Real-IP` to get the user's IP address instead of
-attributing all traffic to the balancer's IP address.
-
-This is a barebones nginx config file that is structurally similar to the
-one we use at FriendFeed. It assumes nginx and the Tornado servers
-are running on the same machine, and the four Tornado servers
-are running on ports 8000 - 8003:
+下面是 nginx 配置文件的一个示例，整体上与我们在 FriendFeed 中使用的差不多。
+它假设 nginx 和 Tornado 是跑在同一台机器上的，四个 Tornado 服务跑在 8000-8003
+端口上：
 
     user nginx;
     worker_processes 1;
@@ -913,20 +905,19 @@ are running on ports 8000 - 8003:
     }
 
 
-WSGI and Google AppEngine
+WSGI 和 Google AppEngine 
 -------------------------
-Tornado comes with limited support for [WSGI](http://wsgi.org/). However,
-since WSGI does not support non-blocking requests, you cannot use any
-of the asynchronous/non-blocking features of Tornado in your application
-if you choose to use WSGI instead of Tornado's HTTP server. Some of the
-features that are not available in WSGI applications:
-`@tornado.web.asynchronous`, the `httpclient` module, and the `auth` module.
 
-You can create a valid WSGI application from your Tornado request handlers
-by using `WSGIApplication` in the `wsgi` module instead of using
-`tornado.web.Application`. Here is an example that uses the built-in WSGI
-`CGIHandler` to make a valid
-[Google AppEngine](http://code.google.com/appengine/) application:
+Tornado 对 [WSGI](http://wsgi.org/) 只提供了有限的支持，即使如此，因为
+WSGI 并不支持非阻塞式的请求，所以如果你使用 WSGI 代替 Tornado 自己的
+HTTP 服务的话，那么你将无法使用 Tornado 的异步非阻塞式的请求处理方式。
+比如 ``@tornado.web.asynchronous``、``httpclient`` 模块、``auth`` 模块，
+这些将都无法使用。
+
+你可以通过 `wsgi` 模块中的 `WSGIApplication` 创建一个有效的 WSGI 应用（区别于
+我们用过的 `tornado.web.Application`）。下面的例子展示了使用内置的 WSGI 
+`CGIHandler` 来创建一个有效的 [Google AppEngine](http://code.google.com/appengine/)
+应用。
 
     import tornado.web
     import tornado.wsgi
@@ -942,15 +933,16 @@ by using `WSGIApplication` in the `wsgi` module instead of using
         ])
         wsgiref.handlers.CGIHandler().run(application)
 
-See the `appengine` example application for a full-featured AppEngine
-app built on Tornado.
-
+请查看 demo 中的  `appengine` 范例，它是一个基于 Tornado 的完整的
+AppEngine 应用。
 
 Caveats and support
 -------------------
-Because FriendFeed and other large users of Tornado run [behind
-nginx](#running-tornado-in-production) or Apache proxies, Tornado's HTTP
-server currently does not attempt to handle multi-line headers and some
-types of malformed input.
 
-You can discuss Tornado and report bugs on [the Tornado developer mailing list](http://groups.google.com/group/python-tornado).
+因为 FriendFeed 以及其他 Tornado 的主要用户在使用时都是基于
+[nginx](#running-tornado-in-production)或者 Apache 代理之后的。所以现在
+Tornado 的 HTTP 服务部分并不完整，它无法处理多行的 header 信息，同时对于一
+些非标准的输入也无能为力。
+
+你可以在 [Tornado 开发者邮件列表](http://groups.google.com/group/python-tornado)
+中讨论和提交 bug。
