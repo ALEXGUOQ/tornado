@@ -51,7 +51,7 @@ python setup.py build
 sudo python setup.py install</code></pre>
   <p>Tornado 的代码托管在 <a href="http://github.com/facebook/tornado">GitHub</a> 上面。对于 Python 2.6 以上的版本，因为标准库中已经包括了对 <code>epoll</code> 的支持，所以你可以不用 <code>setup.py</code> 编译安装，只要简单地将 tornado 的目录添加到 <code>PYTHONPATH</code> 就可以使用了。
 
-  <h3>安装前提</h3>
+  <h3>安装需求</h3>
   <p>Tornado 在 Python 2.5, 2.6, 2.7 中都经过了测试。要使用 Tornado 的所有功能，你需要安装 <a href="http://pycurl.sourceforge.net/">PycURL</a> (7.18.2 或更高版本) 以及 <a href="http://pypi.python.org/pypi/simplejson/">simplejson</a> (仅适用于Python 2.5，2.6 以后的版本标准库当中已经包含了对 JSON 的支持)。为方便起见，下面将列出 Mac OS X 和 Ubuntu 中的完整安装方式：</p>
   <p style="font-weight:bold">Mac OS X 10.6 (Python 2.6+)</p>
   <pre><code>sudo easy_install setuptools pycurl</code></pre>
@@ -936,8 +936,8 @@ HTTP 服务的话，那么你将无法使用 Tornado 的异步非阻塞式的请
 请查看 demo 中的  `appengine` 范例，它是一个基于 Tornado 的完整的
 AppEngine 应用。
 
-Caveats and support
--------------------
+注意事项以及如何获得支持
+-------------------------
 
 因为 FriendFeed 以及其他 Tornado 的主要用户在使用时都是基于
 [nginx](#running-tornado-in-production)或者 Apache 代理之后的。所以现在
