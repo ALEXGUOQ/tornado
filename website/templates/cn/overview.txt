@@ -65,6 +65,7 @@ sudo python setup.py install</code></pre>
 
 模块索引
 ------------
+
 最重要的一个模块是[`web`](http://github.com/facebook/tornado/blob/master/tornado/web.py)，
 它就是包含了 Tornado 的大部分主要功能的 Web 框架。其它的模块都是工具性质的，
 以便让 `web` 模块更加有用 后面的 [Tornado 攻略](#tornado-walkthrough) 详细讲解了
@@ -936,8 +937,8 @@ HTTP 服务的话，那么你将无法使用 Tornado 的异步非阻塞式的请
 请查看 demo 中的  `appengine` 范例，它是一个基于 Tornado 的完整的
 AppEngine 应用。
 
-注意事项以及如何获得支持
--------------------------
+注意事项和社区支持
+-------------------
 
 因为 FriendFeed 以及其他 Tornado 的主要用户在使用时都是基于
 [nginx](#running-tornado-in-production)或者 Apache 代理之后的。所以现在
@@ -946,3 +947,8 @@ Tornado 的 HTTP 服务部分并不完整，它无法处理多行的 header 信�
 
 你可以在 [Tornado 开发者邮件列表](http://groups.google.com/group/python-tornado)
 中讨论和提交 bug。
+
+
+该中文文档的大部分翻译工作由**邹业盛<yeshengzou #gmail.com>**完成，后期的增修和编排由
+**王定巍<gastlygem@gmail.com>**完成。译文版权归原作者和译者所有，并以
+[CC 3.0](http://creativecommons.org/licenses/by/3.0) 协议发布
