@@ -25,10 +25,11 @@ import wsgiref.handlers
 
 class ContentHandler(tornado.web.RequestHandler):
     def get(self, path="index"):
-        paths = ("overview", "index")
-        if path not in paths:
+        paths = {"documentation":"cn/overview", "index":"cn/index",
+                 "en/documentation":"overview", "en":"index"}
+        if path not in paths.keys():
             raise tornado.web.HTTPError(404)
-        self.render(path + ".html", markdown=self.markdown)
+        self.render(paths[path] + ".html", markdown=self.markdown)
 
     def markdown(self, path, toc=False):
         if not hasattr(ContentHandler, "_md") or self.settings.get("debug"):
@@ -52,14 +53,16 @@ settings = {
 application = tornado.wsgi.WSGIApplication([
     (r"/", ContentHandler),
     (r"/(index)", ContentHandler),
-    (r"/documentation/(overview)", ContentHandler),
+    (r"/(en)/?", ContentHandler),
+    (r"/(documentation)/?", ContentHandler),
+    (r"/(en/documentation)/?", ContentHandler),
     (r"/static/tornado-0.1.tar.gz", tornado.web.RedirectHandler,
      dict(url="http://github.com/downloads/facebook/tornado/tornado-0.1.tar.gz")),
     (r"/static/tornado-0.2.tar.gz", tornado.web.RedirectHandler,
      dict(url="http://github.com/downloads/facebook/tornado/tornado-0.2.tar.gz")),
 
-    (r"/documentation/?", tornado.web.RedirectHandler,
-     dict(url="/documentation/overview")),
+    #(r"/documentation/?", tornado.web.RedirectHandler,
+    # dict(url="/documentation/overview")),
     (r"/documentation/reference/?", tornado.web.RedirectHandler,
      dict(url="/documentation/reference/index.html")),
 

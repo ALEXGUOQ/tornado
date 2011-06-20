@@ -947,8 +947,3 @@ Tornado 的 HTTP 服务部分并不完整，它无法处理多行的 header 信�
 
 你可以在 [Tornado 开发者邮件列表](http://groups.google.com/group/python-tornado)
 中讨论和提交 bug。
-
-
-该中文文档的大部分翻译工作由**邹业盛<yeshengzou #gmail.com>**完成，后期的增修和编排由
-**王定巍<gastlygem@gmail.com>**完成。译文版权归原作者和译者所有，并以
-[CC 3.0](http://creativecommons.org/licenses/by/3.0) 协议发布
