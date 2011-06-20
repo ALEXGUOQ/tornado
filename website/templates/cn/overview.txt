@@ -127,7 +127,7 @@ Tornado 的 Web 程序会将 URL 或者 URL 范式映射到 `tornado.web.Request
             self.write("You wrote " + self.get_argument("message"))
 
 上传的文件可以通过 `self.request.files` 访问到，该对象将名称（HTML元素
-<input type="file">的 name 属性）对应到一个文件列表。每一个文件都以字典的形式
+`<input type="file">`的 name 属性）对应到一个文件列表。每一个文件都以字典的形式
 存在，其格式为 `{"filename":..., "content_type":..., "body":...}`。
 
 如果你想要返回一个错误信息给客户端，例如“403 unauthorized”，只需要抛出一个
